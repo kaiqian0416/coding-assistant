@@ -80,10 +80,11 @@
             </select>
           </div>
           <div class="form-group" style="flex:1">
-            <label>知识点</label>
-            <select v-model="editForm.knowledgePoint" class="form-select">
-              <option v-for="kp in knowledgePoints" :key="kp" :value="kp">{{ kp }}</option>
-            </select>
+            <label>知识点（可手动输入自定义）</label>
+            <input v-model="editForm.knowledgePoint" class="form-input" list="kp-edit-list" placeholder="选择已有或输入新知识点" />
+            <datalist id="kp-edit-list">
+              <option v-for="kp in knowledgePoints" :key="kp" :value="kp" />
+            </datalist>
           </div>
         </div>
         <div class="form-group">

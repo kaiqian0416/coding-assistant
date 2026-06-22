@@ -56,6 +56,7 @@
               <option value="total_accepted">通过数</option>
               <option value="total_wrong">错误数</option>
               <option value="total_submit">总提交数</option>
+              <option value="consecutive_checkin">连续签到天数</option>
             </select>
           </div>
           <div class="form-group" style="flex:1">
@@ -131,7 +132,7 @@ async function handleDelete(id: number) {
 }
 
 function typeLabel(t: string) {
-  return { total_accepted: '通过数', total_wrong: '错误数', total_submit: '总提交数' }[t] || t
+  return { total_accepted: '通过数', total_wrong: '错误数', total_submit: '总提交数', consecutive_checkin: '连续签到天数' }[t] || t
 }
 </script>
 

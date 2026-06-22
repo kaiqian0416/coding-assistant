@@ -3,7 +3,7 @@
     <div class="page-header">
       <h1>待审核题目</h1>
       <div class="admin-nav">
-        <router-link to="/admin/questions" class="btn btn-default btn-sm">题目管理</router-link>
+        <router-link to="/admin/questions" class="btn btn-primary btn-sm">题目管理</router-link>
         <router-link to="/admin/generate" class="btn btn-success btn-sm">AI 出题</router-link>
         <router-link to="/admin/review" class="btn btn-warning btn-sm">待审核</router-link>
       </div>

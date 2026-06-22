@@ -44,15 +44,16 @@
       </div>
 
       <div v-if="auth.isLoggedIn" class="card-row">
-        <div class="side-card">
+        <router-link to="/checkin" class="side-card side-link">
           <div class="side-card-inner">
-            <span class="side-card-icon">{{ checkinData.checkedIn ? '✅' : '📅' }}</span>
+            <span class="side-card-icon">{{ checkinData.consecutiveDays ? '🔥' : (checkinData.checkedIn ? '✅' : '📅') }}</span>
             <div class="side-card-body">
               <div class="side-card-title">{{ checkinData.checkedIn ? '今日已打卡' : '今日未打卡' }}</div>
-              <div class="side-card-sub">今日提交 {{ checkinData.todayCount || 0 }} 次</div>
+              <div class="side-card-sub">{{ checkinData.consecutiveDays ? '已连续' + checkinData.consecutiveDays + '天' : ('今日提交 ' + (checkinData.todayCount || 0) + ' 次') }}</div>
             </div>
+            <span class="side-card-arrow">→</span>
           </div>
-        </div>
+        </router-link>
         <router-link to="/achievements" class="side-card side-link">
           <div class="side-card-inner">
             <span class="side-card-icon">🏆</span>

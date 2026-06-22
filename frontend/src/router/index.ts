@@ -13,6 +13,7 @@ const router = createRouter({
     { path: '/leaderboard', name: 'leaderboard', component: () => import('@/views/LeaderboardPage.vue'), meta: { requiresAuth: false } },
     { path: '/wrong-answers', name: 'wrong-answers', component: () => import('@/views/WrongAnswersPage.vue'), meta: { requiresAuth: true } },
     { path: '/achievements', name: 'achievements', component: () => import('@/views/AchievementsPage.vue'), meta: { requiresAuth: true } },
+    { path: '/checkin', name: 'checkin', component: () => import('@/views/CheckinHistoryPage.vue'), meta: { requiresAuth: true } },
     { path: '/profile', name: 'profile', component: () => import('@/views/ProfilePage.vue'), meta: { requiresAuth: true } },
     { path: '/admin/questions', name: 'admin-questions', component: () => import('@/views/admin/QuestionManagePage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
     { path: '/admin/generate', name: 'admin-generate', component: () => import('@/views/admin/AiGeneratePage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },

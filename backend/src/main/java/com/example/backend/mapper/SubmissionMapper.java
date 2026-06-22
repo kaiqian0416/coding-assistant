@@ -45,4 +45,9 @@ public interface SubmissionMapper extends BaseMapper<Submission> {
     @Select("SELECT COUNT(*) FROM submission WHERE user_id = #{userId} " +
             "AND DATE(created_at) = CURDATE()")
     int todaySubmissionCount(@Param("userId") Long userId);
+
+    /** 打卡历史日期列表 */
+    @Select("SELECT DISTINCT DATE(created_at) AS date FROM submission " +
+            "WHERE user_id = #{userId} ORDER BY date DESC")
+    List<String> getCheckinDates(@Param("userId") Long userId);
 }

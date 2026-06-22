@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,28 +26,27 @@ public class AchievementController {
         this.submissionMapper = submissionMapper;
     }
 
-    /** 获取用户成就列表（计算哪些已获得） */
     @GetMapping
     public ApiResponse<List<Map<String, Object>>> getAchievements(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null) return ApiResponse.unauthorized("未登录");
         User user = (User) session.getAttribute(SessionInterceptor.SESSION_USER);
 
-        // 从数据库读取成就定义
         List<Achievement> defs = achievementMapper.selectList(null);
         if (defs.isEmpty()) return ApiResponse.success(List.of());
 
-        // 计算用户统计数据
         var subs = submissionMapper.findByUserId(user.getId());
         long total = subs.size();
         long accepted = subs.stream().filter(s -> "accepted".equals(s.getResult())).count();
         long wrong = total - accepted;
+        List<String> dates = submissionMapper.getCheckinDates(user.getId());
+        long consecutive = calcConsecutive(dates);
 
-        Map<String, Long> stats = Map.of(
-            "total_submit", total,
-            "total_accepted", accepted,
-            "total_wrong", wrong
-        );
+        Map<String, Long> stats = new LinkedHashMap<>();
+        stats.put("total_submit", total);
+        stats.put("total_accepted", accepted);
+        stats.put("total_wrong", wrong);
+        stats.put("consecutive_checkin", consecutive);
 
         List<Map<String, Object>> result = defs.stream()
             .sorted(Comparator.comparingInt(Achievement::getSortOrder))
@@ -66,5 +66,16 @@ public class AchievementController {
             .collect(Collectors.toList());
 
         return ApiResponse.success(result);
+    }
+
+    private int calcConsecutive(List<String> dates) {
+        if (dates == null || dates.isEmpty()) return 0;
+        Set<String> set = new HashSet<>(dates);
+        LocalDate today = LocalDate.now();
+        if (!set.contains(today.toString()) && !set.contains(today.minusDays(1).toString())) return 0;
+        LocalDate cursor = set.contains(today.toString()) ? today : today.minusDays(1);
+        int count = 0;
+        while (set.contains(cursor.toString())) { count++; cursor = cursor.minusDays(1); }
+        return count;
     }
 }

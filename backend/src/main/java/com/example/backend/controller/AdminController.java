@@ -132,7 +132,7 @@ public class AdminController {
         User user = new User();
         user.setUsername(username); user.setPassword(passwordEncoder.encode(password));
         user.setNickname(body.getOrDefault("nickname", username));
-        user.setEmail(body.get("email")); user.setRole(body.getOrDefault("role", "user"));
+        String email = body.get("email"); user.setEmail(email != null && !email.isBlank() ? email : null); user.setRole(body.getOrDefault("role", "user"));
         user.setAbilityLevel(body.getOrDefault("abilityLevel", "easy"));
         userMapper.insert(user); user.setPassword(null);
         Map<String, Object> result = new LinkedHashMap<>();
@@ -147,7 +147,7 @@ public class AdminController {
         User user = userMapper.selectById(id);
         if (user == null) return ApiResponse.error("用户不存在");
         if (body.containsKey("nickname")) user.setNickname(body.get("nickname"));
-        if (body.containsKey("email")) user.setEmail(body.get("email"));
+        if (body.containsKey("email")) { String e = body.get("email"); user.setEmail(e != null && !e.isBlank() ? e : null); }
         if (body.containsKey("role")) user.setRole(body.get("role"));
         if (body.containsKey("abilityLevel")) user.setAbilityLevel(body.get("abilityLevel"));
         if (body.containsKey("password") && !body.get("password").isBlank()) user.setPassword(passwordEncoder.encode(body.get("password")));

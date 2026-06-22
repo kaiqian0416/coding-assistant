@@ -4,12 +4,12 @@
 
 ## 技术栈
 
-| 层级 | 技术 |
-|------|------|
+| 层级 | 技术                                             |
+|------|------------------------------------------------|
 | 前端 | Vue 3 + TypeScript + Vite + Pinia + Vue Router |
-| 后端 | Spring Boot 3.2 + MyBatis-Plus 3.5 + Maven |
-| 数据库 | MySQL 8.0 |
-| AI | DeepSeek API（可选，默认使用模拟模式） |
+| 后端 | Spring Boot 3.2 + MyBatis-Plus 3.5 + Maven     |
+| 数据库 | MySQL 8.0                                      |
+| AI | glm-4-plus（可选）          |
 
 ---
 
@@ -63,8 +63,24 @@ npm run dev
 
 打开浏览器访问 `http://localhost:5173`
 
-**预置管理员账号：** `admin` / `admin123`
+**预置管理员账号：** `admin` 
+**密码：** `admin123` 
+**预置普通用户账号：** `头斯特` 
+**密码：** `123qwe` 
 
+
+---
+
+## AI 功能配置
+
+项目默认使用glm-4-plus模型，如需切换其他模型，请配置 API Key：
+
+```properties
+# application.properties
+ai.api.key=sk-your-api-key-here
+ai.api.url=https://xxxxxxxxxxxx
+ai.api.model=xxxxx-xxxx
+```
 ---
 
 ## 项目结构
@@ -114,92 +130,3 @@ coding-assistant/
 └── README.md
 ```
 
----
-
-## API 接口一览
-
-### 用户模块
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| POST | `/api/user/register` | 注册 |
-| POST | `/api/user/login` | 登录 |
-| POST | `/api/user/logout` | 登出 |
-| GET | `/api/user/profile` | 获取个人信息 |
-| PUT | `/api/user/profile` | 更新个人信息 |
-
-### 题目模块
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/questions` | 题目列表（支持筛选） |
-| GET | `/api/questions/{id}` | 题目详情 |
-| GET | `/api/questions/recommended?userId={id}` | 个性化推荐 |
-| GET | `/api/questions/pending-review` | 待审核列表（管理员） |
-| PUT | `/api/questions/{id}/approve` | 审核通过 |
-| PUT | `/api/questions/{id}/reject` | 驳回 |
-
-### 提交判题
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| POST | `/api/submissions` | 提交代码（含判题+AI诊断） |
-| GET | `/api/submissions/my` | 我的提交历史 |
-| GET | `/api/submissions/stats` | 提交统计 |
-| GET | `/api/submissions/my/question/{qid}` | 某题的提交记录 |
-
-### 学习统计
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/stats/overview` | 学习概况（含知识点掌握度） |
-
-### 管理员
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| POST | `/api/admin/ai/generate-question` | AI 生成题目 |
-| POST | `/api/admin/questions` | 手动录入题目 |
-| PUT | `/api/admin/questions/{id}` | 编辑题目 |
-| DELETE | `/api/admin/questions/{id}` | 删除题目 |
-
----
-
-## AI 功能配置
-
-项目默认使用**模拟模式**（不依赖外部 API），可正常演示所有功能。
-
-如需真实 AI 诊断和出题，配置 DeepSeek API Key：
-
-```properties
-# application.properties
-ai.api.key=sk-your-deepseek-api-key-here
-ai.api.url=https://api.deepseek.com/v1/chat/completions
-ai.api.model=deepseek-chat
-```
-
----
-
-## 数据库设计
-
-### E-R 图（简要）
-
-- **user** (1) ──→ (N) **submission**: 一个用户有多次提交
-- **question** (1) ──→ (N) **submission**: 一道题有多次提交
-- **user** (1) ──→ (N) **learning_stats**: 一个用户有多个知识点统计
-
-### 核心表说明
-
-| 表名 | 说明 | 关键字段 |
-|------|------|----------|
-| `user` | 用户表 | username, password(BCrypt), role, ability_level |
-| `question` | 题目表 | title, difficulty, knowledge_point, sample_input/output, review_status |
-| `submission` | 提交记录表 | user_id, question_id, code, result, score, ai_diagnosis |
-| `learning_stats` | 学习统计表 | user_id, knowledge_point, total/correct/wrong_count, accuracy |
-
----
-
-## 功能演示路径
-
-1. **普通用户**：注册 → 登录 → 首页看推荐 → 进题库选题目 → 写代码 → 提交看结果和AI诊断 → 学习统计看知识点掌握度
-2. **管理员**：登录（admin/admin123）→ 后台管理 → 手动新增题目/AI辅助出题 → 审核题目

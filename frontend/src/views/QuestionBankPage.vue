@@ -9,10 +9,11 @@
           <option value="medium">中等</option>
           <option value="hard">困难</option>
         </select>
-        <select v-model="filters.knowledgePoint" class="form-select" style="width:140px" @change="loadQuestions">
-          <option value="">全部知识点</option>
-          <option v-for="kp in knowledgePoints" :key="kp" :value="kp">{{ kp }}</option>
-        </select>
+        <input v-model="filters.knowledgePoint" class="form-input" list="filter-kp-list" style="width:160px" placeholder="知识点" @change="loadQuestions" />
+        <datalist id="filter-kp-list">
+          <option value="">全部</option>
+          <option v-for="kp in knowledgePoints" :key="kp" :value="kp" />
+        </datalist>
       </div>
     </div>
 
